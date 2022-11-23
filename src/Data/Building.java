@@ -1,32 +1,38 @@
 package Data;
 
+import App.DataReader;
+
 public class Building {
 
     Room[] rooms = new Room[4];
 
-    Conditioner BasicAirConditioner = new Conditioner("Basic", 1, true);
-    Conditioner ProAirConditioner = new Conditioner("Pro", 2, false);
+
+    Conditioner Pro1 = new Conditioner(2, true);
+    Conditioner Pro2 = new Conditioner(2, false);
+    Conditioner Basic1 = new Conditioner( 1, false);
+    Conditioner Basic2 = new Conditioner( 1, false);
 
     public Building() {
-        rooms[0] = new Room("salon", ProAirConditioner, 30, 24.5, 24);
-        rooms[1] = new Room("lazienka", BasicAirConditioner, 10, 25, 24);
-        rooms[2] = new Room("sypialnia", BasicAirConditioner, 10, 25, 23);
-        rooms[3] = new Room("kuchnia", BasicAirConditioner, 10, 26, 24);
+        rooms[0] = new Room("salon", Pro1, 20, 25.5, 22);
+        rooms[1] = new Room("lazienka", Basic1, 5, 25.5, 22);
+        rooms[2] = new Room("sypialnia", Pro2, 10, 26, 22);
+        rooms[3] = new Room("kuchnia", Basic2, 10, 26, 22);
     }
 
     public void controlLoop(){
         do {
             for (Room room: rooms){
-            room.coolTemperature();
+            room.runConditioner();
             }
             for (Room room: rooms){
             room.printStatus();
             }
         System.out.println();
-        rooms[0].sleepOneSecond();
+        Room.sleepOneSecond();
     }
         while (isAllTemperatureOK()==false);
 }
+
     private boolean isAllTemperatureOK(){
         for (Room room: rooms){
             if (room.getCurrentTemperature()>room.getTargetTemperature())
@@ -35,6 +41,9 @@ public class Building {
         return true;
     }
 
+    public void controlTemperature(int room, double targetTemperature){
+        rooms[room-1].setTargetTemperature(targetTemperature);
+    }
 }
 
 

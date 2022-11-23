@@ -44,7 +44,11 @@ public class Room {
     }
 
     public void setCurrentTemperature(double currentTemperature) {
-        this.currentTemperature = currentTemperature;
+        if (currentTemperature<=targetTemperature){
+            this.currentTemperature=targetTemperature;
+            conditionerOFF();
+        }else
+            this.currentTemperature = currentTemperature;
     }
 
     public double getTargetTemperature() {
@@ -55,33 +59,30 @@ public class Room {
         this.targetTemperature = targetTemperature;
     }
 
-    public void printStatus() {
-        System.out.println(getName() + ": target: " + targetTemperature +  " actual: " + String.format("%.2f", currentTemperature) + " conditioner: " + printConditionerStatus());
+    public void runConditioner() {
+        configureConditioner();
+        cooling();
     }
-
-    public void conditionerON() {
-        conditioner.setActive(true);
-    }
-
-    public void conditionerOFF() {
-        conditioner.setActive(false);
-    }
-
-    public double cooling() {
-        return conditioner.getCooling() / getVolume();
-    }
-
-    public void coolTemperature() {
-        if ( isTemperatureOK()==false&&isConditionerON()==false) {
+    public void configureConditioner() {
+        if (isTargetTemperatureDone()==false && isConditionerON()==false) {
             conditionerON();
-            System.out.println("Włączono klimatyzator w: " + getName() +".");
         }
-       else if (currentTemperature > targetTemperature) {
-            setCurrentTemperature(getCurrentTemperature() - cooling());
-        }
-       else if (isTemperatureOK()==true){
-           conditionerOFF();
-        }
+    }
+
+    public void cooling() {
+            setCurrentTemperature(getCurrentTemperature() - conditioner.getCooling()/getVolume());
+    }
+
+    private boolean isConditionerON(){
+        return conditioner.active==true;
+    }
+
+    public boolean isTargetTemperatureDone(){
+        return getCurrentTemperature()<=getTargetTemperature();
+    }
+
+    public void printStatus() {
+        System.out.println(getName() + ": target: " + targetTemperature +  " current: " + String.format("%.2f", currentTemperature) + " conditioner: " + printConditionerStatus());
     }
 
     private String printConditionerStatus(){
@@ -92,18 +93,18 @@ public class Room {
             return "OFF";
     }
 
-    private boolean isConditionerON(){
-        return conditioner.active==true;
-    }
-    public boolean isTemperatureOK(){
-        return getCurrentTemperature()<= getTargetTemperature();
-    }
-
-    public void sleepOneSecond() {
+    public static void sleepOneSecond() {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    public void conditionerON() {
+        conditioner.setActive(true);
+    }
+
+    public void conditionerOFF() {
+        conditioner.setActive(false);
     }
 }
