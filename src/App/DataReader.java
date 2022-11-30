@@ -17,4 +17,5 @@ public class DataReader {
     public int getIn(){
         return scanner.nextInt();
     }
+
 }

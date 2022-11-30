@@ -45,18 +45,21 @@ public class AirConditioningSystemControl {
             System.out.println(SET_TARGET_TEMPERATURES + "- Ustaw temperaturę docelową");
         }
 
-         private void printOption2 () {
+        private void printOption2 () {
             System.out.println("Wybierz pomieszczenie:");
             System.out.println(SALON + "- Salon");
             System.out.println(LAZIENKA + "- Lazienka");
             System.out.println(SYPIALNIA + "- Sypialnia");
             System.out.println(KUCHNIA + "- Kuchnia");
             System.out.println(EXIT + "- Wstecz");
-    }
+        }
 
         private void exit () {
             System.out.println("Do zobaczenia!");
             dataReader.close();
+        }
+        private void exit2 () {
+
         }
 
         private int SetTemperatureControlLoop () {
@@ -78,7 +81,6 @@ public class AirConditioningSystemControl {
                         setTargetTemperature(KUCHNIA);
                         break;
                     case EXIT:
-                        controlLoop();
                         break;
                     default:
                         System.out.println("Nie ma takiej opcji, wprowadź ponownie: ");
@@ -91,7 +93,7 @@ public class AirConditioningSystemControl {
             double newTemperature = dataReader.readTargetTemerature();
             building.controlTemperature(room, newTemperature);
         }
-    }
+}
 
 
 
